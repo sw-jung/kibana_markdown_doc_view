@@ -1,0 +1,42 @@
+.markdown-doc-view {
+  // Core variables and mixins
+  @import "~ui/styles/variables";
+  @import "~ui/styles/bootstrap/mixins.less";
+
+  // Reset and dependencies
+  @import "~ui/styles/bootstrap/normalize.less";
+  @import "~ui/styles/bootstrap/glyphicons.less";
+
+  // Core CSS
+  @import "~ui/styles/bootstrap/scaffolding.less";
+  @import "~ui/styles/bootstrap/type.less";
+  @import "~ui/styles/bootstrap/code.less";
+  @import "~ui/styles/bootstrap/grid.less";
+  @import "~ui/styles/bootstrap/tables.less";
+
+  font-family: @font-family-base;
+  font-size: @font-size-base;
+  line-height: @line-height-base;
+  color: @text-color;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    text-align: inherit;
+  }
+
+  pre {
+    border-radius: 0;
+    border: none;
+  }
+
+  table {
+    th, td {
+      font-family: @font-family-base;
+      border: none;
+    }
+  }
+}

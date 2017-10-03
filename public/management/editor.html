@@ -1,0 +1,161 @@
+<kbn-management-app section="kibana">
+  <div class="markdown-doc-view-management kuiView">
+    <!-- Constrained width, centered content -->
+    <div class="kuiViewContent">
+      <!-- Header -->
+      <div class="kuiViewContentItem kuiBar kuiVerticalRhythm">
+        <div class="kuiBarSection">
+          <h1 class="kuiTitle">
+            Edit Markdown Template for "{{editingId}}"
+          </h1>
+        </div>
+        <div class="kuiToolBarSection">
+          <a class="kuiButton kuiButton--basic kuiButton--iconText" ng-href="#/discover?_a=(index:'{{editingId}}')">
+            <span class="kuiButton__inner">
+              <span class="kuiButton__icon kuiIcon fa-eye"></span>
+              <span>View in discover</span>
+            </span>
+          </a>
+
+          <button
+            class="kuiButton kuiButton--danger kuiButton--iconText"
+            ng-click="delete()"
+          >
+            <span class="kuiButton__inner">
+              <span class="kuiButton__icon kuiIcon fa-trash-o"></span>
+              <span>Delete this template</span>
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <div class="kuiViewContentItem kuiVerticalRhythm">
+      </div>
+
+      <div class="row kuiViewContentItem kuiVerticalRhythm">
+        <!-- Editor -->
+        <div class="col-md-8">
+          <div class="kuiTabs kuiVerticalRhythm">
+            <button type="button" class="kuiTab kuiTab-isSelected">Editor</button>
+          </div>
+
+          <div class="kuiVerticalRhythm">
+            <textarea markdown-editor="editorOptions" ng-model="editingSource.source"></textarea>
+          </div>
+
+          <div class="kuiVerticalRhythm">
+            <button type="button" class="kuiButton kuiButton--primary" ng-click="save()">
+              <span class="kuiButton__inner">Save Template</span>
+            </button>
+            <button type="button" class="kuiButton kuiButton--basic" ng-click="cancel()">
+              <span class="kuiButton__inner">Cancel</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-md-4">
+          <div class="kuiTabs kuiVerticalRhythm" ng-init="selectedTab = 'docSample'">
+            <button type="button" class="kuiTab" ng-class="{'kuiTab-isSelected': selectedTab === 'docSample'}" ng-click="selectedTab = 'docSample'">Sample Document</button>
+            <button type="button" class="kuiTab" ng-class="{'kuiTab-isSelected': selectedTab === 'options'}" ng-click="selectedTab = 'options'">Options</button>
+          </div>
+
+          <div class="doc-sample-section kuiVerticalRhythm" ng-show="selectedTab === 'docSample'" ng-init="loadSampleDocuments()">
+            <ui-select
+              class="kuiVerticalRhythm"
+              ng-model="docSample"
+              on-select="convertDocToVars(indexPattern, $item)"
+              ng-init="registerDocSelector($select)"
+              reset-search-input="false"
+            >
+              <ui-select-match placeholder="Search... (e.g. status:200 AND extension:PHP)">
+                {{$select.selected._id}}
+              </ui-select-match>
+              <ui-select-choices repeat="doc in docSamples">
+                <div>{{doc._id}}</div>
+              </ui-select-choices>
+              <ui-select-no-choice>
+                <div class="kuiText kuiSubduedText text-center">No results found. Refine your query.</div>
+              </ui-select-no-choice>
+            </ui-select>
+
+            <p class="kuiVerticalRhythm">The following variables can be used in the Markdown by using
+            <a href="http://handlebarsjs.com/expressions.html" target="_BLANK">the Handlebar (mustache) syntax.</a></p>
+
+            <table class="table kuiVerticalRhythm">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="var in varIndex">
+                  <td><a ng-click="drawText(var.key)">{{var.key}}</a></td>
+                  <td><code>{{var.value}}</code></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="kuiVerticalRhythm" ng-bind-html="messages.INTRODUCE_EACH_ALL | markdown"></div>
+          </div>
+
+          <div class="kuiVerticalRhythm" ng-show="selectedTab === 'options'">
+            <div class="kuiHeaderBar kuiVerticalRhythm">
+              <div class="kuiHeaderBarSection">
+                <h3 class="kuiSubTitle">
+                  Render Options
+                </h3>
+              </div>
+            </div>
+            <div class="kuiVerticalRhythm">
+              <label class="kuiCheckBoxLabel kuiVerticalRhythm">
+                <input
+                  class="kuiCheckBox"
+                  type="checkbox"
+                  ng-model="editingSource.options.linkify"
+                  ng-change="updatePreview()"
+                >
+                <span class="kuiCheckBoxLabel__text">
+                  <b>Linkify</b>: Autoconvert link-like texts to link
+                </span>
+              </label>
+
+              <label class="kuiCheckBoxLabel kuiVerticalRhythm">
+                <input
+                  class="kuiCheckBox"
+                  type="checkbox"
+                  ng-model="editingSource.options.breaks"
+                  ng-change="updatePreview()"
+                >
+                <span class="kuiCheckBoxLabel__text">
+                  <b>Breaks</b>: Newlines in paragraphs are rendered as <code>&lt;br&gt;</code>
+                </span>
+              </label>
+            </div>
+            <div class="kuiHeaderBar kuiVerticalRhythm">
+              <div class="kuiHeaderBarSection">
+                <h3 class="kuiSubTitle">
+                  Custom Style
+                </h3>
+              </div>
+            </div>
+            <div
+              class="markdown-doc-view-style-input kuiPanel kuiVerticalRhythm"
+              ui-ace="{
+                mode: 'less',
+                advanced: {
+                  tabSize: 2,
+                  useSoftTabs: true
+                },
+                onChange: updatePreview
+              }"
+              ng-model="editingSource.options.style"
+            ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</kbn-management-app>

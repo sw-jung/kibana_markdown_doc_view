@@ -1,0 +1,22 @@
+{
+  "markdown_template": {
+    "properties": {
+      "template": {
+        "type": "text"
+      },
+      "options": {
+        "properties": {
+          "linkify": {
+            "type": "boolean"
+          },
+          "breaks": {
+            "type": "boolean"
+          },
+          "style": {
+            "type": "text"
+          }
+        }
+      }
+    }
+  }
+}

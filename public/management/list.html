@@ -1,0 +1,191 @@
+<kbn-management-app section="kibana" ng-init="getData()">
+  <div class="kuiView">
+    <!-- Constrained width, centered content -->
+    <div class="kuiViewContent kuiViewContent--constrainedWidth">
+      <!-- Header -->
+      <div class="kuiViewContentItem kuiBar kuiVerticalRhythm">
+        <div class="kuiBarSection">
+          <h1 class="kuiTitle">
+            Edit Markdown Templates
+          </h1>
+        </div>
+        <div class="kuiToolBarSection">
+          <button
+            class="kuiButton kuiButton--basic kuiButton--iconText"
+            ng-click="export(templates)"
+          >
+            <span class="kuiButton__inner">
+              <span aria-hidden="true" class="kuiButton__icon kuiIcon fa-download"></span>
+              <span>Export Everything</span>
+            </span>
+          </button>
+  
+          <file-upload
+            on-read="import(fileContents)"
+            upload-selector="#importBtn"
+          >
+            <button
+              id="importBtn"
+              class="kuiButton kuiButton--basic kuiButton--iconText"
+            >
+              <span class="kuiButton__inner">
+                <span aria-hidden="true" class="kuiButton__icon kuiIcon fa-upload"></span>
+                <span>Import</span>
+              </span>
+            </button>
+          </file-upload>
+        </div>
+      </div>
+  
+      <!-- Intro -->
+      <p class="kuiViewContentItem kuiVerticalRhythm">
+        From here you can edit document view template for each index patterns using markdown.
+      </p>
+
+      <div class="kuiViewContentItem">
+        <div class="kuiControlledTable kuiVerticalRhythm">
+          <!-- ToolBar -->
+          <div class="kuiToolBar">
+            <div class="kuiToolBarSearch">
+              <div class="kuiToolBarSearchBox">
+                <div class="kuiToolBarSearchBox__icon kuiIcon fa-search"></div>
+                <input
+                  class="kuiToolBarSearchBox__input"
+                  type="text"
+                  placeholder="Search..."
+                  ng-model="searchText"
+                >
+              </div>
+            </div>
+            <div class="kuiToolBarSection">
+              <!-- Delete button -->
+              <button
+                class="kuiButton kuiButton--danger kuiButton--iconText"
+                ng-click="delete()"
+                aria-label="Delete selected templates"
+                ng-disabled="selectedItems.length == 0"
+              >
+                <span class="kuiButton__inner">
+                  <span aria-hidden="true" class="kuiButton__icon kuiIcon fa-trash"></span>
+                  <span>Delete</span>
+                </span>
+              </button>
+
+              <!-- Export button -->
+              <button
+                class="kuiButton kuiButton--basic kuiButton--iconText"
+                ng-click="export(selectedItems)"
+                aria-label="Export selected templates"
+                ng-disabled="selectedItems.length == 0"
+              >
+                <span class="kuiButton__inner">
+                  <span aria-hidden="true" class="kuiButton__icon kuiIcon fa-download"></span>
+                  <span>Export</span>
+                </span>
+              </button>
+            </div>
+            <div class="kuiToolBarSection">
+              <!-- We need an empty section for the buttons to be positioned consistently. -->
+            </div>
+          </div>
+
+          <!-- NoResults -->
+          <div
+            class="kuiPanel kuiPanel--centered kuiPanel--withHeader"
+            ng-show="!filteredList.length"
+          >
+            <div class="kuiTableInfo">
+              No templates matched your search.
+            </div>
+          </div>
+  
+          <!-- Table -->
+          <table class="kuiTable" ng-show="filteredList.length">
+            <thead>
+              <tr>
+                <th class="kuiTableHeaderCell kuiTableHeaderCell--checkBox">
+                  <input
+                    type="checkbox"
+                    class="kuiCheckBox"
+                    ng-checked="areAllRowsChecked()"
+                    ng-click="toggleAll()"
+                  >
+                </th>
+                <th class="kuiTableHeaderCell kuiTableHeaderCell--sortable" ng-click="changeOrder('_id')">
+                  IndexPattern
+                  <span
+                    class="kuiTableSortIcon kuiIcon"
+                    ng-class="{
+                      'fa-long-arrow-up': listOrder === '+_id',
+                      'fa-long-arrow-down': listOrder === '-_id'
+                    }
+                  "></span>
+                </th>
+                <th class="kuiTableHeaderCell kuiTableHeaderCell--sortable" ng-click="changeOrder('status')">
+                  Status
+                  <span
+                    class="kuiTableSortIcon kuiIcon"
+                    ng-class="{
+                      'fa-long-arrow-up': listOrder === '+status',
+                      'fa-long-arrow-down': listOrder === '-status'
+                    }
+                  "></span>
+                </th>
+              </tr>
+            </thead>
+  
+            <tbody>
+              <tr class="kuiTableRow" ng-repeat="item in filteredList = (list | filter: { _id: searchText }) | orderBy: listOrder">
+                <td class="kuiTableRowCell kuiTableRowCell--checkBox">
+                  <div class="kuiTableRowCell__liner">
+                    <input
+                      type="checkbox"
+                      class="kuiCheckBox"
+                      ng-click="toggleItem(item)"
+                      ng-checked="selectedItems.indexOf(item) >= 0"
+                      ng-disabled="!item.hasMarkdownTemplate"
+                    >
+                  </div>
+                </td>
+                <td class="kuiTableRowCell">
+                  <div class="kuiTableRowCell__liner">
+                    <a ng-href="#/management/kibana/markdown_template/{{item._id}}">{{item._id}}</a>
+                  </div>
+                </td>
+                <td class="kuiTableRowCell">
+                  <div class="kuiTableRowCell__liner">
+                    <span class="kuiStatusText" ng-class="'kuiStatusText--' + item.status">
+                      <span
+                        class="kuiStatusText__icon kuiIcon"
+                        ng-class="{
+                          'fa-info': item.status === 'info',
+                          'fa-check': item.status === 'success',
+                          'fa-bolt': item.status === 'warning',
+                          'fa-warning': item.status === 'error'
+                        }"
+                      ></span>
+                      <span ng-if="!item.hasIndexPattern">This template will not be used. Because index pattern can't be found.</span>
+                      <span ng-if="!item.hasMarkdownTemplate">No template for this index pattern.</span>
+                    </span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- ToolBarFooter -->
+          <div class="kuiToolBarFooter">
+            <div class="kuiToolBarFooterSection">
+              <div class="kuiToolBarText" ng-show="selectedItems.length">
+                {{ selectedItems.length }} selected
+              </div>
+            </div>
+            <div class="kuiToolBarFooterSection">
+              <!-- We need an empty section for the buttons to be positioned consistently. -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</kbn-management-app>
