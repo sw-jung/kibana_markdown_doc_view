@@ -1,5 +1,4 @@
 import { chain, set } from 'lodash';
-import striptags from 'striptags';
 
 export function convertDocToVars(indexPattern, doc) {
   if (doc.$_template_vars) return doc.$_template_vars;
@@ -11,7 +10,7 @@ export function convertDocToVars(indexPattern, doc) {
 
   vars._all = chain(flattenedHit)
   .map((value, key) => {
-    const formattedValue = striptags(formattedHit[key]);
+    const formattedValue = formattedHit[key];
     set(vars, `${key}.raw`, value);
     set(vars, `${key}.formatted`, formattedValue);
     return {

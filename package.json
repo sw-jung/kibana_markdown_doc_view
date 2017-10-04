@@ -43,7 +43,6 @@
     "markdown-it-sub": "^1.0.0",
     "markdown-it-sup": "^1.0.0",
     "sanitize-html": "^1.14.1",
-    "simplemde": "^1.11.2",
-    "striptags": "^3.1.0"
+    "simplemde": "^1.11.2"
   }
 }

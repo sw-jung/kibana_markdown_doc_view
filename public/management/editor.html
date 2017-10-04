@@ -92,7 +92,7 @@
               <tbody>
                 <tr ng-repeat="var in varIndex">
                   <td><a ng-click="drawText(var.key)">{{var.key}}</a></td>
-                  <td><code>{{var.value}}</code></td>
+                  <td><code ng-bind-html="var.value"></code></td>
                 </tr>
               </tbody>
             </table>

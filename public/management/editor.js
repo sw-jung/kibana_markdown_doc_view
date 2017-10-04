@@ -18,7 +18,7 @@ useful for creating lists with data from a group by...
 # All fields
 
 {{#each _all}}
-- {{label}} \`{{formatted}}\`
+- {{label}}: {{{formatted}}}
 {{/each}}
 \`\`\`
   `
@@ -90,7 +90,7 @@ uiRoutes
       .map(({ label, raw, formatted }) => {
         return [
           { key: `{{${label}.raw}}`, value: raw },
-          { key: `{{${label}.formatted}}`, value: formatted }
+          { key: `{{{${label}.formatted}}}`, value: formatted }
         ];
       })
       .flatten()
