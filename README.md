@@ -8,11 +8,9 @@ A plugin for custom doc view using markdown+handlebars template.
 
 ## Features
 
-### New Doc View "Markdown"
+### New Doc View: "Markdown"
 
-You can use the new doc view named "Markdown" in discover and dashboard's search panel.
-
-It's based on custom template using [markdown](https://markdown-it.github.io) and [handlebars](http://handlebarsjs.com).
+You can use the new doc view named "Markdown" in discover and dashboard's search panel. It's based on custom template using [markdown](https://markdown-it.github.io) and [handlebars](http://handlebarsjs.com).
 
 In kibana's management page, you can manage templates for each index patterns.
 
