@@ -54,8 +54,7 @@ uiRoutes
         $scope.valid = true;
         Promise.resolve(new MarkdownTemplate(plainText, $scope.editingSource.options))
         .then(newTemplate => newTemplate.render($scope.vars))
-        .then(renderedText => $compile(renderedText)($scope))
-        .then(compiledElement => angular.element(preview).empty().append(compiledElement))
+        .then(renderedHtml => angular.element(preview).empty().append(renderedHtml))
         .catch(e => {
           $scope.valid = false;
           preview.innerHTML = renderError(e);
