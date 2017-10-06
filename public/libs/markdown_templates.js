@@ -1,6 +1,7 @@
 import { uiModules } from 'ui/modules';
 import { MarkdownTemplate } from '../libs/markdown_template';
 import MappingSetupProvider from 'ui/utils/mapping_setup';
+import mappings from '../../lib/mappings.json';
 
 export function MarkdownTemplatesProvider(esAdmin, kbnIndex, Private) {
   const index = kbnIndex;
@@ -10,20 +11,7 @@ export function MarkdownTemplatesProvider(esAdmin, kbnIndex, Private) {
 
   // Init mapping
   const mappingSetup = Private(MappingSetupProvider);
-  const mapping = mappingSetup.expandShorthand({
-    template: 'string',
-    options: {
-      properties: {
-        linkify: {
-          type: 'boolean'
-        },
-        breaks: {
-          type: 'boolean'
-        },
-        style: 'string'
-      }
-    }
-  });
+  const mapping = mappings[type].properties;
 
   mappingSetup.isDefined(type)
   .then((defined) => {

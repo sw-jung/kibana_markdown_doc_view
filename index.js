@@ -1,4 +1,4 @@
-import mappings from './mappings.json';
+import mappings from './lib/mappings.json';
 
 export default function (kibana) {
   return new kibana.Plugin({
