@@ -1,7 +1,7 @@
 import { chain, upperFirst, camelCase, remove, pick, attempt, isArray, find } from 'lodash';
 import Promise from 'bluebird';
 import angular from 'angular';
-import { saveAs } from '@spalger/filesaver';
+import { saveAs } from '@elastic/filesaver';
 import uiRoutes from 'ui/routes';
 import template from './list.html';
 
