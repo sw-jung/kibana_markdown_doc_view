@@ -2,9 +2,57 @@
 
 A plugin for custom doc view using markdown+handlebars template.
 
+![Demo](demo.gif)
+
 ---
 
 > TODO: Documentation of features introduction and usage
+> TODO: add custom order options
+
+## Features
+
+### Custom Doc View
+
+You can use the new doc view named "Markdown" in discover or dashboard's search panel.
+
+It's based on custom template using [markdown](https://markdown-it.github.io) and [handlebars](http://handlebarsjs.com).
+
+
+
+### Manage Template
+
+Each index patterns have own template. It's managed on your kibana settings page.
+
+
+
+## Installation
+
+Copy installation file's url as same version of your kibana from [the repository releases](https://github.com/sw-jung/kibana_markdown_doc_view/releases).
+
+And
+```bash
+$ cd path/to/your/kibana
+$ bin/kibana-plugin install <installation file's url>
+```
+
+ If you want more information, See [this document](https://www.elastic.co/guide/en/kibana/current/_installing_plugins.html).
+
+> **NOTE: How can I do if I cannot find version I want?**  
+> I'm sorry for that. This plugin not all of kibana versions are supported.  
+> If you need unsupported version, please test nearest version.  
+> In this case, you need to modify the kibana.version field in package.json.  
+> **Currently minimum support version is v5.5.0**
+
+## Configuration
+
+The following configurable options are set by default.
+
+### kibana.yml
+
+```yml
+markdown_doc_view:
+  enabled: true
+```
 
 ## development
 
