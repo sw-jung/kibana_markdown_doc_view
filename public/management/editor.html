@@ -10,7 +10,7 @@
           </h1>
         </div>
         <div class="kuiToolBarSection">
-          <a class="kuiButton kuiButton--basic kuiButton--iconText" ng-href="#/discover?_a=(index:'{{editingId}}')">
+          <a class="kuiButton kuiButton--basic kuiButton--iconText" ng-href="#/discover?_a=(index:'{{indexPattern.id}}')">
             <span class="kuiButton__inner">
               <span class="kuiButton__icon kuiIcon fa-eye"></span>
               <span>View in discover</span>
@@ -83,6 +83,7 @@
               The following variables can be used in the Markdown by using
               <a href="http://handlebarsjs.com/expressions.html" target="_BLANK">the Handlebar (mustache) syntax.</a>
             </p>
+
             <div class="kuiInfoPanel kuiInfoPanel--info kuiVerticalRhythm">
               <div class="kuiInfoPanelHeader">
                 <span class="kuiInfoPanelHeader__icon kuiIcon kuiIcon--info fa-info"></span>
@@ -92,7 +93,16 @@
               </div>
             </div>
 
-            <table class="table kuiVerticalRhythm">
+            <div class="kuiInfoPanel kuiInfoPanel--error kuiVerticalRhythm" ng-if="noIndexPattern">
+              <div class="kuiInfoPanelHeader">
+                <span class="kuiInfoPanelHeader__icon kuiIcon kuiIcon--error fa-warning"></span>
+                <span class="kuiInfoPanelHeader__title">
+                  Cannot load document sample. IndexPattern not found.
+                </span>
+              </div>
+            </div>
+
+            <table class="table kuiVerticalRhythm" ng-if="!noIndexPattern">
               <thead>
                 <tr>
                   <th>Name</th>

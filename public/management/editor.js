@@ -26,24 +26,28 @@ useful for creating lists with data from a group by...
 const renderError = compileTemplate(renderErrorTemplate);
 
 uiRoutes
-.when('/management/kibana/markdown_template/:indexPatternId', {
+.when('/management/kibana/markdown_template/:id', {
   template,
   resolve: {
     indexPattern: ($route, courier) => {
+      const { indexPatternId } = $route.current.params;
+
+      if (isEmpty(indexPatternId)) return;
+
       return courier.indexPatterns
-        .get($route.current.params.indexPatternId)
-        .catch(courier.redirectWhenMissing('/management/kibana/markdown_template'));
+      .get(indexPatternId)
+      .catch(courier.redirectWhenMissing('/management/kibana/markdown_template'));
     },
     markdownTemplate: ($route, markdownTemplates) => {
       return markdownTemplates
-      .get($route.current.params.indexPatternId);
+      .get($route.current.params.id);
     }
   },
   controller: ($scope, $route, $compile, $window, markdownTemplates, es, confirmModal, Notifier) => {
     const notify = new Notifier({ location: 'Markdown Template Editor' });
     $scope.messages = messages;
     $scope.indexPattern = $route.current.locals.indexPattern;
-    $scope.editingId = $route.current.params.indexPatternId;
+    $scope.editingId = $route.current.params.id;
     $scope.editingSource = $route.current.locals.markdownTemplate;
     $scope.editorOptions = {
       autofocus: true,
@@ -84,6 +88,8 @@ uiRoutes
     };
 
     $scope.convertDocToVars = (indexPattern, doc) => {
+      if (!indexPattern) return $scope.noIndexPattern = true;
+
       $scope.vars = convertDocToVars(indexPattern, doc);
       $scope.varIndex = chain($scope.vars._all)
       .map(({ label, raw, formatted }) => {

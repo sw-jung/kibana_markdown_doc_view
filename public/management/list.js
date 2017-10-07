@@ -3,13 +3,15 @@ import Promise from 'bluebird';
 import angular from 'angular';
 import { saveAs } from '@elastic/filesaver';
 import uiRoutes from 'ui/routes';
+import { SavedObjectsClientProvider } from 'ui/saved_objects';
 import template from './list.html';
 
 uiRoutes
 .when('/management/kibana/markdown_template', {
   template,
-  controller: ($scope, $route, courier, markdownTemplates, confirmModal, esAdmin, kbnIndex, Notifier) => {
+  controller: ($scope, $route, courier, markdownTemplates, confirmModal, esAdmin, kbnIndex, Notifier, Private) => {
     const notify = new Notifier({ location: 'Markdown Templates' });
+    const savedObjectsClient = Private(SavedObjectsClientProvider);
     $scope.list = [];
     $scope.templates = [];
     $scope.selectedItems = [];
@@ -17,18 +19,29 @@ uiRoutes
 
     $scope.getData = () => {
       return Promise.all([
-        courier.indexPatterns.getIds(),
+        savedObjectsClient.find({
+          type: 'index-pattern',
+          fields: [],
+          perPage: 10000
+        })
+        .then(resp => resp.savedObjects),
         markdownTemplates.list()
       ])
       .then(([indexPatterns, templates]) => {
         $scope.list = chain(indexPatterns)
-        .map(id => ({ _id: id, _type: 'index-pattern' }))
+        .map(indexPattern => ({
+          _id: indexPattern.attributes.title,
+          _type: 'index-pattern',
+          indexPatternId: indexPattern.id
+        }))
         .concat(templates)
         .reduce((map, hit) => {
-          const { _id, _type, _source } = hit;
+          const { _id, _type, _source, indexPatternId } = hit;
           const item = map[_id] || (map[_id] = { _id });
           item[`has${upperFirst(camelCase(_type))}`] = true;
-          if (_type === 'markdown_template') {
+          if (_type === 'index-pattern') {
+            item.indexPatternId = indexPatternId;
+          } else if (_type === 'markdown_template') {
             item._type = _type;
             item._source = _source;
           }

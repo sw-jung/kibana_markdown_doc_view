@@ -17,7 +17,7 @@ DocViewsRegistryProvider.register(markdownTemplates => {
       },
       link: ($scope, elem) => {
         const { indexPattern, hit } = $scope;
-        markdownTemplates.get(indexPattern.id)
+        markdownTemplates.get(indexPattern.title)
         .then(template => template.isEmpty() ? defaultTemplate : template.render(convertDocToVars(indexPattern, hit)))
         .then(renderedHtml => elem.empty().append(renderedHtml));
       }

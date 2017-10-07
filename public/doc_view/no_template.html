@@ -4,7 +4,10 @@
   </div>
 
   <div class="kuiPromptForItems__actions">
-    <a class="kuiButton kuiButton--primary kuiButton--iconText" href="#/management/kibana/markdown_template/{{indexPattern.id}}">
+    <a
+      class="kuiButton kuiButton--primary kuiButton--iconText"
+      href="#/management/kibana/markdown_template/{{indexPattern.title}}?indexPatternId={{indexPattern.id}}"
+    >
       <span class="kuiButton__inner">
         <span class="kuiButton__icon kuiIcon fa-plus"></span>
         <span>Create markdown template</span>
