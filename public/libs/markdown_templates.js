@@ -1,23 +1,11 @@
 import { uiModules } from 'ui/modules';
 import { MarkdownTemplate } from '../libs/markdown_template';
-import MappingSetupProvider from 'ui/utils/mapping_setup';
-import mappings from '../../lib/mappings.json';
 
-export function MarkdownTemplatesProvider(esAdmin, kbnIndex, Private) {
+export function MarkdownTemplatesProvider(esAdmin, kbnIndex) {
   const index = kbnIndex;
   const type = 'markdown_template';
   const self = this;
   const cache = {};
-
-  // Init mapping
-  const mappingSetup = Private(MappingSetupProvider);
-  const mapping = mappings[type].properties;
-
-  mappingSetup.isDefined(type)
-  .then((defined) => {
-    if (defined) return true;
-    return mappingSetup.setup(type, mapping);
-  });
 
   self.list = q => {
     const allHits = [];
