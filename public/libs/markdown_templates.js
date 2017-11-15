@@ -1,7 +1,7 @@
 import { uiModules } from 'ui/modules';
 import { MarkdownTemplate } from '../libs/markdown_template';
 
-export function MarkdownTemplatesProvider(esAdmin, kbnIndex) {
+export function MarkdownTemplatesProvider(es, kbnIndex) {
   const index = kbnIndex;
   const type = 'markdown_template';
   const self = this;
@@ -9,7 +9,7 @@ export function MarkdownTemplatesProvider(esAdmin, kbnIndex) {
 
   self.list = q => {
     const allHits = [];
-    return esAdmin.search({
+    return es.search({
       index,
       type,
       q,
@@ -19,7 +19,7 @@ export function MarkdownTemplatesProvider(esAdmin, kbnIndex) {
     .then(function getMoreUntilDone(resp) {
       allHits.push(...resp.hits.hits);
       if (resp.hits.total <= allHits.length) return allHits;
-      return esAdmin.scroll({
+      return es.scroll({
         scrollId: resp._scroll_id
       }).then(getMoreUntilDone);
     });
@@ -28,7 +28,7 @@ export function MarkdownTemplatesProvider(esAdmin, kbnIndex) {
   self.get = id => {
     return Promise.resolve(cache[id])
     .then((cached) => {
-      return cached || esAdmin.getSource({
+      return cached || es.getSource({
         index,
         type,
         ignore: 404,
@@ -41,7 +41,7 @@ export function MarkdownTemplatesProvider(esAdmin, kbnIndex) {
   };
 
   self.save = (id, docTemplate, options) => {
-    return esAdmin.index({
+    return es.index({
       index,
       type,
       id: id,
@@ -52,7 +52,7 @@ export function MarkdownTemplatesProvider(esAdmin, kbnIndex) {
 
   self.delete = ids => {
     ids = [].concat(ids);
-    return esAdmin.deleteByQuery({
+    return es.deleteByQuery({
       index,
       type,
       body: {

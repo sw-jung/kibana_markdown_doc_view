@@ -9,7 +9,7 @@ import template from './list.html';
 uiRoutes
 .when('/management/kibana/markdown_template', {
   template,
-  controller: ($scope, $route, courier, markdownTemplates, confirmModal, esAdmin, kbnIndex, Notifier, Private) => {
+  controller: ($scope, $route, courier, markdownTemplates, confirmModal, es, kbnIndex, Notifier, Private) => {
     const notify = new Notifier({ location: 'Markdown Templates' });
     const savedObjectsClient = Private(SavedObjectsClientProvider);
     $scope.list = [];
@@ -157,7 +157,7 @@ uiRoutes
         });
       }))
       .then(() => {
-        return esAdmin.indices.refresh({
+        return es.indices.refresh({
           index: kbnIndex
         });
       })
