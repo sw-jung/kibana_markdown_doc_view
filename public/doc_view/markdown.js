@@ -3,7 +3,9 @@ import './markdown.less';
 import defaultTemplate from './no_template.html';
 import { DocViewsRegistryProvider } from 'ui/registry/doc_views';
 import { convertDocToVars } from '../libs/convert_doc_to_vars';
+import { compileTemplate } from '../libs/compile_template';
 
+const compiledDefaultTemplate = compileTemplate(defaultTemplate);
 DocViewsRegistryProvider.register(markdownTemplates => {
   return {
     title: 'Markdown',
@@ -18,7 +20,7 @@ DocViewsRegistryProvider.register(markdownTemplates => {
       link: ($scope, elem) => {
         const { indexPattern, hit } = $scope;
         markdownTemplates.get(indexPattern.title)
-        .then(template => template.isEmpty() ? defaultTemplate : template.render(convertDocToVars(indexPattern, hit)))
+        .then(template => template.isEmpty() ? compiledDefaultTemplate($scope) : template.render(convertDocToVars(indexPattern, hit)))
         .then(renderedHtml => elem.empty().append(renderedHtml));
       }
     }
