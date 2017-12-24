@@ -1,70 +1,47 @@
 import { uiModules } from 'ui/modules';
+import { Scanner } from 'ui/utils/scanner';
+import { SavedObjectsClientProvider } from 'ui/saved_objects';
 import { MarkdownTemplate } from '../libs/markdown_template';
 
-export function MarkdownTemplatesProvider(esAdmin, kbnIndex) {
-  const index = kbnIndex;
-  const type = 'markdown_template';
+export function MarkdownTemplatesProvider(kbnIndex, esAdmin, Private) {
   const self = this;
+  const type = 'markdown_template';
+  const scanner = new Scanner(esAdmin, {
+    index: kbnIndex,
+    type
+  });
+  const savedObjectsClient = Private(SavedObjectsClientProvider);
   const cache = {};
 
-  self.list = q => {
-    const allHits = [];
-    return esAdmin.search({
-      index,
-      type,
-      q,
-      size: 100,
-      ignoreUnavailable: true
-    })
-    .then(function getMoreUntilDone(resp) {
-      allHits.push(...resp.hits.hits);
-      if (resp.hits.total <= allHits.length) return allHits;
-      return esAdmin.scroll({
-        scrollId: resp._scroll_id
-      }).then(getMoreUntilDone);
-    });
+  self.list = queryString => {
+    return scanner.scanAndMap(queryString, {
+      pageSize: 1000,
+      docCount: Infinity
+    }).then(({ hits }) => hits);
   };
 
   self.get = id => {
-    return Promise.resolve(cache[id])
-    .then((cached) => {
-      return cached || esAdmin.getSource({
-        index,
-        type,
-        ignore: 404,
-        id: id
-      }).then((source = {}) => {
-        const { template, options } = source;
-        return cache[id] = new MarkdownTemplate(template, options);
-      });
-    });
+    return Promise.resolve(cache[id] || savedObjectsClient.get(type, id)
+    .then(({ attributes }) => {
+      const { template, options } = attributes;
+      return cache[id] = new MarkdownTemplate(template, options);
+    }));
   };
 
-  self.save = (id, docTemplate, options) => {
-    return esAdmin.index({
-      index,
-      type,
-      id: id,
-      body: docTemplate,
-      refresh: options ? options.refresh : true
-    }).then(() => delete cache[id]);
+  self.save = (id, docTemplate) => {
+    return savedObjectsClient.create(type, docTemplate, {
+      id,
+      overwrite: true
+    })
+    .then(() => delete cache[id]);
   };
 
   self.delete = ids => {
-    ids = [].concat(ids);
-    return esAdmin.deleteByQuery({
-      index,
-      type,
-      body: {
-        query: {
-          ids: {
-            values: ids
-          }
-        }
-      },
-      refresh: true,
-      ignoreUnavailable: true
-    }).then(() => ids.forEach(id => delete cache[id]));
+    return Promise.all([].concat(ids)
+    .map(id => {
+      return savedObjectsClient.delete(type, id)
+      .then(() => delete cache[id]);
+    }));
   };
 }
 
