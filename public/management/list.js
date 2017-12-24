@@ -156,11 +156,6 @@ uiRoutes
           notify.error(e);
         });
       }))
-      .then(() => {
-        return es.indices.refresh({
-          index: kbnIndex
-        });
-      })
       .then($scope.getData)
       .catch(notify.error);
     };
