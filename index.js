@@ -12,7 +12,7 @@ export default function (kibana) {
 
     config(Joi) {
       return Joi.object({
-        enabled: Joi.boolean().default(true),
+        enabled: Joi.boolean().default(true)
       }).default();
     },
 

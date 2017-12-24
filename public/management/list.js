@@ -70,7 +70,7 @@ uiRoutes
     };
 
     $scope.areAllRowsChecked = () => {
-      if ($scope.list.length === 0) {
+      if ($scope.templates.length === 0) {
         return false;
       }
 

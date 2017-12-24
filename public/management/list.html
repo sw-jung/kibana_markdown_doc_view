@@ -109,6 +109,7 @@
                     class="kuiCheckBox"
                     ng-checked="areAllRowsChecked()"
                     ng-click="toggleAll()"
+                    ng-disabled="!templates.length"
                   >
                 </th>
                 <th class="kuiTableHeaderCell kuiTableHeaderCell--sortable" ng-click="changeOrder('_id')">

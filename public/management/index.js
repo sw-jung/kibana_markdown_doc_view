@@ -6,5 +6,5 @@ import './editor';
 management.getSection('kibana').register('markdown_template', {
   display: 'Markdown Templates',
   order: 40,
-  url: '#/management/kibana/markdown_template/'
+  url: '#/management/kibana/markdown_template'
 });
