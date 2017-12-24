@@ -11,6 +11,7 @@ export function MarkdownTemplatesProvider(kbnIndex, $http, Private) {
     type
   });
   const savedObjectsClient = Private(SavedObjectsClientProvider);
+  const cache = {};
 
   self.list = queryString => {
     return scanner.scanAndMap(queryString, {
@@ -20,23 +21,27 @@ export function MarkdownTemplatesProvider(kbnIndex, $http, Private) {
   };
 
   self.get = id => {
-    return savedObjectsClient.get(type, id)
+    return Promise.resolve(cache[id] || savedObjectsClient.get(type, id)
     .then(({ attributes }) => {
       const { template, options } = attributes;
-      return new MarkdownTemplate(template, options);
-    });
+      return cache[id] = new MarkdownTemplate(template, options);
+    }));
   };
 
   self.save = (id, docTemplate) => {
     return savedObjectsClient.create(type, docTemplate, {
       id,
       overwrite: true
-    });
+    })
+    .then(() => delete cache[id]);
   };
 
   self.delete = ids => {
     return Promise.all([].concat(ids)
-    .map(id => savedObjectsClient.delete(type, id)));
+    .map(id => {
+      return savedObjectsClient.delete(type, id)
+      .then(() => delete cache[id]);
+    }));
   };
 }
 
