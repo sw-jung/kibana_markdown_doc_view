@@ -13,6 +13,7 @@
           <button
             class="kuiButton kuiButton--basic kuiButton--iconText"
             ng-click="export(templates)"
+            ng-disabled="!templates.length"
           >
             <span class="kuiButton__inner">
               <span aria-hidden="true" class="kuiButton__icon kuiIcon fa-download"></span>
