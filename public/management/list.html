@@ -105,33 +105,51 @@
             <thead>
               <tr>
                 <th class="kuiTableHeaderCell kuiTableHeaderCell--checkBox">
-                  <input
-                    type="checkbox"
-                    class="kuiCheckBox"
-                    ng-checked="areAllRowsChecked()"
-                    ng-click="toggleAll()"
-                    ng-disabled="!templates.length"
-                  >
+                  <span class="kuiTableHeaderCell__liner">
+                    <input
+                      type="checkbox"
+                      class="kuiCheckBox"
+                      ng-checked="areAllRowsChecked()"
+                      ng-click="toggleAll()"
+                      ng-disabled="!templates.length"
+                    >
+                  </span>
                 </th>
-                <th class="kuiTableHeaderCell kuiTableHeaderCell--sortable" ng-click="changeOrder('_id')">
-                  IndexPattern
-                  <span
-                    class="kuiTableSortIcon kuiIcon"
-                    ng-class="{
-                      'fa-long-arrow-up': listOrder === '+_id',
-                      'fa-long-arrow-down': listOrder === '-_id'
-                    }
-                  "></span>
+                <th class="kuiTableHeaderCell">
+                  <button
+                    type="button"
+                    class="kuiTableHeaderCellButton"
+                    ng-class="{ 'kuiTableHeaderCellButton-isSorted': isSorted('_id') }"
+                    ng-click="changeOrder('_id')">
+                    <span class="kuiTableHeaderCell__liner">
+                      IndexPattern
+                      <span
+                        class="kuiTableSortIcon kuiIcon"
+                        ng-class="{
+                          'fa-long-arrow-up': listOrder === '+_id',
+                          'fa-long-arrow-down': listOrder === '-_id'
+                        }
+                      "></span>
+                    </span>
+                  </button>
                 </th>
-                <th class="kuiTableHeaderCell kuiTableHeaderCell--sortable" ng-click="changeOrder('status')">
-                  Status
-                  <span
-                    class="kuiTableSortIcon kuiIcon"
-                    ng-class="{
-                      'fa-long-arrow-up': listOrder === '+status',
-                      'fa-long-arrow-down': listOrder === '-status'
-                    }
-                  "></span>
+                <th class="kuiTableHeaderCell">
+                  <button
+                    type="button"
+                    class="kuiTableHeaderCellButton"
+                    ng-class="{ 'kuiTableHeaderCellButton-isSorted': isSorted('status') }"
+                    ng-click="changeOrder('status')">
+                    <span class="kuiTableHeaderCell__liner">
+                      Status
+                      <span
+                        class="kuiTableSortIcon kuiIcon"
+                        ng-class="{
+                          'fa-long-arrow-up': listOrder === '+status',
+                          'fa-long-arrow-down': listOrder === '-status'
+                        }
+                      "></span>
+                    </span>
+                  </button>
                 </th>
               </tr>
             </thead>
