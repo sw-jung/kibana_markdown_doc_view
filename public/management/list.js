@@ -100,7 +100,7 @@ uiRoutes
     };
 
     $scope.export = (items = []) => {
-      if (!items.length) notify.error('No templates to export.');
+      if (!items.length) return notify.error('No templates to export.');
       const blob = new Blob([
         angular.toJson(items.map(item => pick(item, ['_id', '_type', '_source'])), true)
       ], {
