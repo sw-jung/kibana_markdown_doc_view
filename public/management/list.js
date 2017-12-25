@@ -1,4 +1,4 @@
-import { chain, upperFirst, camelCase, remove, pick, attempt, isArray, find } from 'lodash';
+import { chain, remove, pick, attempt, isArray, find } from 'lodash';
 import Promise from 'bluebird';
 import angular from 'angular';
 import { saveAs } from '@elastic/filesaver';
@@ -38,10 +38,11 @@ uiRoutes
         .reduce((map, hit) => {
           const { _id, _type, _source, indexPatternId } = hit;
           const item = map[_id] || (map[_id] = { _id });
-          item[`has${upperFirst(camelCase(_type))}`] = true;
           if (_type === 'index-pattern') {
+            item.hasIndexPattern = true;
             item.indexPatternId = indexPatternId;
           } else if (_type === 'markdown_template') {
+            item.hasMarkdownTemplate = true;
             item._type = _type;
             item._source = _source;
           }
@@ -61,6 +62,10 @@ uiRoutes
         $scope.templates = $scope.list.filter(item => item.hasMarkdownTemplate);
       })
       .then(() => $scope.$apply());
+    };
+
+    $scope.isSorted = key => {
+      return $scope.listOrder.endsWith(key);
     };
 
     $scope.changeOrder = key => {
