@@ -117,7 +117,12 @@
               </tbody>
             </table>
 
-            <div class="kuiVerticalRhythm" ng-bind-html="messages.INTRODUCE_EACH_ALL | markdown"></div>
+            <p class="kuiVerticalRhythm">There is also a special variable named _all which you can use to access the entire tree.
+              This is useful for creating lists with data from a group by...</p>
+
+            <div class="kuiVerticalRhythm euiCodeBlock euiCodeBlock--fontSmall euiCodeBlock--paddingLarge">
+              <pre class="euiCodeBlock__pre"><code class="euiCodeBlock__code" ng-bind="messages.INTRODUCE_EACH_ALL"></code></pre>
+            </div>
           </div>
 
           <div class="kuiVerticalRhythm" ng-show="selectedTab === 'options'">

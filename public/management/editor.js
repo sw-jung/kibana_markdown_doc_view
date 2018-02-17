@@ -10,18 +10,11 @@ import { MarkdownTemplate } from '../libs/markdown_template';
 import { convertDocToVars } from '../libs/convert_doc_to_vars';
 
 const messages = {
-  INTRODUCE_EACH_ALL: `
-There is also a special variable named \`_all\` which you can use to access the entire tree. This is
-useful for creating lists with data from a group by...
-
-\`\`\`
-# All fields
+  INTRODUCE_EACH_ALL: `# All fields
 
 {{#each _all}}
 - {{label}}: {{{formatted}}}
-{{/each}}
-\`\`\`
-  `
+{{/each}}`
 };
 const renderError = compileTemplate(renderErrorTemplate);
 
